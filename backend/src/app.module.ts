@@ -4,6 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { BoardModule } from './apis/board/board.module';
 
 @Module({
   imports: [
@@ -11,7 +12,7 @@ import { AppService } from './app.service';
       driver: ApolloDriver,
       autoSchemaFile: 'src/common/graphql/schema.gql',
       context: ({ req, res }) => ({ req, res }),
-      playground: false,
+      playground: true,
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -25,6 +26,7 @@ import { AppService } from './app.service';
       logging: true,
       timezone: 'Asia/Seoul',
     }),
+    BoardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

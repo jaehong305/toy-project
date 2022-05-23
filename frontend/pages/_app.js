@@ -1,13 +1,17 @@
 import '../styles/globals.css';
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 function MyApp({ Component, pageProps }) {
   const client = new ApolloClient({
-    uri: '',
+    uri: 'http://localhost:3050/graphql',
     cache: new InMemoryCache(),
   });
 
-  return <Component {...pageProps} />;
+  return (
+    <ApolloProvider client={client}>
+      <Component {...pageProps} />
+    </ApolloProvider>
+  );
 }
 
 export default MyApp;
