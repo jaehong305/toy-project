@@ -1,5 +1,10 @@
-import { InputType, PickType } from '@nestjs/graphql';
-import { CreateBoardInput } from './createBoard.Input';
+import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
-export class UpdateBoardInput extends PickType(CreateBoardInput, ['title', 'content'], InputType) {}
+export class UpdateBoardInput {
+  @Field(() => String, { nullable: true })
+  title?: string;
+
+  @Field(() => String, { nullable: true })
+  content?: string;
+}

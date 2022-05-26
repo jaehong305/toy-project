@@ -1,18 +1,22 @@
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { CREATE_BOARD, UPDATE_BOARD } from './BoardWrite.queries';
 import BoardWriteUI from './BoardWrite.presenter';
+import { IMutation, IMutationCreateBoardArgs } from '../../../../commons/types/generated/types';
 
-export default function BoardWrite({ isEdit }) {
+export default function BoardWrite({ isEdit, data }) {
   const router = useRouter();
-  const [createBoard] = useMutation(CREATE_BOARD);
+  const { id } = router.query;
+  const [createBoard] = useMutation<Pick<IMutation, 'createBoard'>, IMutationCreateBoardArgs>(
+    CREATE_BOARD,
+  );
   const [updateBoard] = useMutation(UPDATE_BOARD);
-  const [title, setTitle] = useState();
-  const [content, setContent] = useState();
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState('');
   const [isActive, setIsActive] = useState(false);
 
-  const onChangeTitle = event => {
+  const onChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
     if (event.target.value && content) {
       setIsActive(true);
@@ -20,7 +24,7 @@ export default function BoardWrite({ isEdit }) {
       setIsActive(false);
     }
   };
-  const onChangeContent = event => {
+  const onChangeContent = (event: ChangeEvent<HTMLInputElement>) => {
     setContent(event.target.value);
     if (title && event.target.value) {
       setIsActive(true);
@@ -28,7 +32,6 @@ export default function BoardWrite({ isEdit }) {
       setIsActive(false);
     }
   };
-
   const onClickSubmit = async () => {
     try {
       const result = await createBoard({
@@ -46,7 +49,27 @@ export default function BoardWrite({ isEdit }) {
     }
   };
 
-  const onClickEdit = async () => {
+  const onClickUpdate = async () => {
+    if (!title && !content) {
+      alert('수정사항이 없습니다.');
+      return;
+    }
+
+    interface IMyVariables {
+      id: string | string[];
+      updateBoardInput: {
+        title?: string;
+        content?: string;
+      };
+    }
+
+    const myVariables: IMyVariables = {
+      id,
+      updateBoardInput: {},
+    };
+    if (title) myVariables.updateBoardInput.title = title;
+    if (content) myVariables.updateBoardInput.content = content;
+
     await updateBoard({
       variables: {
         id: router.query.id,
@@ -64,9 +87,10 @@ export default function BoardWrite({ isEdit }) {
       onChangeTitle={onChangeTitle}
       onChangeContent={onChangeContent}
       onClickSubmit={onClickSubmit}
-      onClickEdit={onClickEdit}
+      onClickUpdate={onClickUpdate}
       isActive={isActive}
       isEdit={isEdit}
+      data={data}
     />
   );
 }

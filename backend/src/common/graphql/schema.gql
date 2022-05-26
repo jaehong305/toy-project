@@ -28,7 +28,7 @@ type Query {
 
 type Mutation {
   createBoard(createBoardInput: CreateBoardInput!): Board!
-  updateBoard(id: String!, updateBoardInput: UpdateBoardInput!): Board!
+  updateBoard(id: String!, updateBoardInput: UpdateBoardInput!): String!
   deleteBoard(id: String!): Boolean!
 }
 
@@ -38,6 +38,6 @@ input CreateBoardInput {
 }
 
 input UpdateBoardInput {
-  title: String!
-  content: String!
+  title: String
+  content: String
 }

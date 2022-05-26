@@ -28,12 +28,14 @@ export class BoardService {
   }
 
   async update({ id, updateBoardInput }) {
-    const board = await this.findOne({ id });
-    const newBoard = {
-      ...board,
-      ...updateBoardInput,
-    };
-    return await this.boardRepository.save({ ...newBoard });
+    // const board = await this.findOne({ id });
+    // const newBoard = {
+    //   ...board,
+    //   ...updateBoardInput,
+    // };
+    //return await this.boardRepository.save({ ...newBoard });
+    await this.boardRepository.update({ id }, { ...updateBoardInput });
+    return '수정완료';
   }
 
   async delete({ id }) {

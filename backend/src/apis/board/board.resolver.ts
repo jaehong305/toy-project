@@ -24,7 +24,7 @@ export class BoardResolver {
     return await this.boardService.create({ createBoardInput });
   }
 
-  @Mutation(() => Board)
+  @Mutation(() => String)
   async updateBoard(
     @Args('id') id: string,
     @Args('updateBoardInput') updateBoardInput: UpdateBoardInput,
